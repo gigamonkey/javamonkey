@@ -255,28 +255,11 @@ java-catch template."
       (concat "I, " (upcase (user-login-name)) ", am too lazy to write a single sentence about what this class is for."))))
 
 (tempo-define-template
- "old-java-class"
+ "java-class"
  '("package " (javamonkey-find-package) ";" n
    n
    javamonkey-java-copyright
    n
-   n
-   "/**" > n
-   "* " (javamonkey-auto-class-javadoc) > n
-   "*/" > n
-   "public class " (javamonkey-current-classname) " {" n
-   n
-   > p n
-   n
-   "}"))
-
-(tempo-define-template
- "java-class"
- '(
-   "/*" > n
-   "* Copyright (c) 2005 Terracotta, Inc. All rights reserved."  > n
-   "*/" > n
-   "package " (javamonkey-find-package) ";" n
    n
    "/**" > n
    "* " (javamonkey-auto-class-javadoc) > n
