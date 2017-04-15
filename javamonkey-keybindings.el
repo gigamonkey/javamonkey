@@ -1,8 +1,8 @@
 (require 'javamonkey)
 
-(global-set-key [(control ?=)]    'javamonkey-align)
-(global-set-key [(control j)]     'join-line)
-(global-set-key [(meta g)]        'goto-line)
+;(global-set-key [(control ?=)]    'javamonkey-align)
+;(global-set-key [(control j)]     'join-line)
+;(global-set-key [(meta g)]        'goto-line)
 (global-set-key [(control f6)]    'javamonkey-clear-imported-type)
 (global-set-key [(control right)] 'javamonkey-fill-to-right)
 (global-set-key [f10]             'p4-edit)
