@@ -651,7 +651,7 @@ the given classname. (Tests end in 'Test')."
     (if (search-forward-regexp "import\\s +\\([^ ;]+\\)\\s *;" (javamonkey-eol) t)
         (let ((classname (match-string-no-properties 1)))
           (if classname
-              (find-file (javamonkey-find-source-file classname))))
+              (javamonkey-jump-to-file (javamonkey-find-source-file classname))))
       nil)))
 
 (defun javamonkey-ediff-from-diff-q ()
@@ -677,7 +677,7 @@ the given classname. (Tests end in 'Test')."
               (line-number (string-to-number (match-string-no-properties 2))))
           (if (and classname line-number)
               (progn
-                (find-file (javamonkey-find-source-file classname))
+                (javamonkey-jump-to-file (javamonkey-find-source-file classname))
                 (goto-line line-number))))
       nil)))
 
@@ -690,7 +690,7 @@ the given classname. (Tests end in 'Test')."
               (line-number (match-string-no-properties 3)))
           (if filename
               (progn
-                (find-file filename)
+                (javamonkey-jump-to-file filename)
                 (if line-number (goto-line (string-to-number line-number))))))
       nil)))
 
@@ -703,7 +703,7 @@ grep -r output.)"
     (search-forward-regexp ".*$" (point-max) t)
     (let ((filename (match-string-no-properties 0)))
       (if (file-exists-p filename)
-          (find-file filename)
+          (javamonkey-jump-to-file filename)
         nil))))
 
 (defun javamonkey-jump-to-source-from-jikes-output ()
@@ -714,7 +714,7 @@ grep -r output.)"
     (if (search-forward-regexp "compiling \"\\(.*\\.java\\)\"" (point-max) t)
         (let ((filename (match-string-no-properties 1)))
           (if (file-exists-p filename)
-              (find-file filename)
+              (javamonkey-jump-to-file filename)
             nil))
       nil)))
 
@@ -737,8 +737,38 @@ grep -r output.)"
   (let ((pkg (javamonkey-get-package-for-import type)))
     (if (not pkg)
         (message (concat "Don't know package for " type))
-      (find-file (javamonkey-find-source-file (concat pkg "." type))))))
+      (javamonkey-jump-to-file (javamonkey-find-source-file (concat pkg "." type))))))
 
+(defun javamonkey-jump-to-file (file)
+  (javamonkey-jumper-push-definition-stack)
+  (find-file file))
+
+;; Next two functions same as in jumper.el
+(defun javamonkey-jumper-push-definition-stack ()
+  "Add point to find-tag-marker-ring."
+  (cond
+   ((featurep 'xemacs) (push-tag-mark))
+   ;;(t (ring-insert find-tag-marker-ring (point-marker)))
+   (t (xref-push-marker-stack))
+   ))
+
+(defun javamonkey-jumper-pop-definition-stack ()
+  "Pop the edit-definition stack and goto the location."
+  (interactive)
+  (cond
+   ((featurep 'xemacs) (pop-tag-mark nil))
+   (t (xref-pop-marker-stack))))
+
+
+(define-minor-mode javamonkey-java-jumper-mode
+  "Jump to definitions using javamonkey-super-jump-to-source"
+  :init-value nil
+  :lighter " java-jmp"
+  :global nil
+  :keymap
+  (list
+   (cons (kbd "M-.") 'javamonkey-super-jump-to-source)
+   (cons (kbd "M-,") 'javamonkey-jumper-pop-definition-stack)))
 
 (defun javamonkey-eol ()
   (save-excursion
