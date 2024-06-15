@@ -365,9 +365,9 @@ aligned on the regex '=' becomes:
             (while (= (char-before) ?\\)
               (setq num-slashes (+ 1 num-slashes))
               (backward-char))
-            (if (or (= num-slashes 0) (evenp num-slashes))
+            (if (or (= num-slashes 0) (cl-evenp num-slashes))
                 (setq num-quotes (+ 1 num-quotes))))))
-      (not (evenp num-quotes)))))
+      (not (cl-evenp num-quotes)))))
 
 (defun javamonkey-check-import ()
   "Check whether the point is after a Java type name (starts with an upper
@@ -760,7 +760,7 @@ source roots in order based on where you are."
         (read-file-name "You're on your own: "))))
 
 (defun javamonkey-search-order-source-roots ()
-  (sort (copy-list javamonkey-java-source-roots)
+  (sort (cl-copy-list javamonkey-java-source-roots)
         'javamonkey-source-root-search-predicate))
 
 (defun javamonkey-source-root-search-predicate (a b)
