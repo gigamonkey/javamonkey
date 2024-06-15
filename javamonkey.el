@@ -44,7 +44,7 @@
 
 (c-add-style
  "javamonkey-java" '("java"
-                     ;(c-basic-offset . 2)
+                     (c-basic-offset . 2)
                      (c-offsets-alist . ((arglist-intro . +)
                                          (substatement-open . 0)))
                      (c-hanging-comment-ender-p . nil)))
