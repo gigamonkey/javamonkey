@@ -258,9 +258,6 @@ java-catch template."
  "java-class"
  '("package " (javamonkey-find-package) ";" n
    n
-   javamonkey-java-copyright
-   n
-   n
    "/**" > n
    "* " (javamonkey-auto-class-javadoc) > n
    "*/" > n
@@ -274,15 +271,10 @@ java-catch template."
  "java-exception-class"
  '("package " (javamonkey-find-package) ";" n
    n
-   "import com.kenamea.util.NestedException;" > n
-   n
-   javamonkey-java-copyright
-   n
-   n
    "/**" > n
    "* " (javamonkey-auto-class-javadoc) > n
    "*/" > n
-   "public class " (javamonkey-current-classname) " extends NestedException {" n
+   "public class " (javamonkey-current-classname) " {" n
    n
    (javamonkey-current-classname) "() {}" > n
    (javamonkey-current-classname) "(String message) { super(message); }" > n
