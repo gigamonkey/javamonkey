@@ -17,7 +17,7 @@
 ;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 ;; USA
 
-(require 'cl)
+(require 'cl-lib)
 (require 'cc-mode)
 
 (defvar javamonkey-java-package-history nil)
@@ -122,19 +122,19 @@ aligned on the regex '=' becomes:
 
 (defun javamonkey-tidy-parens-and-braces (arg)
   (interactive "P")
-  (cl-flet ((replace (pat rep)
+  (cl-flet ((cl-replace (pat rep)
           (goto-char (point-min))
           (if arg
               (replace-regexp pat rep)
             (query-replace-regexp pat rep))))
     (save-excursion
-      (replace "(\\s +" "(")
-      (replace "\\s +(" "(")
-      (replace "\\(if\\|while\\|for\\|catch\\|switch\\|=\\)\\s *(" "\\1 (")
-      (replace "\\s +)" ")")
-      (replace "\\(\\S +\\){" "\\1 {")
-      (replace "}\\(\\S +\\)" "} \\1")
-      (replace "}\\s +$" "}"))))
+      (cl-replace "(\\s +" "(")
+      (cl-replace "\\s +(" "(")
+      (cl-replace "\\(if\\|while\\|for\\|catch\\|switch\\|=\\)\\s *(" "\\1 (")
+      (cl-replace "\\s +)" ")")
+      (cl-replace "\\(\\S +\\){" "\\1 {")
+      (cl-replace "}\\(\\S +\\)" "} \\1")
+      (cl-replace "}\\s +$" "}"))))
 
 (defun javamonkey-forward-into-nomenclature-kill-word (&optional arg)
   (interactive "p")
@@ -815,7 +815,7 @@ prama_stage/server/java/ roots."
       (string< a b))))
 
 (defun javamonkey-common-start-length (a b)
-  (do ((max (min (length a) (length b)))
+  (cl-do ((max (min (length a) (length b)))
        (idx 0 (setq idx (1+ idx))))
       ((or (>= idx max)
            (not (char-equal (aref a idx) (aref b idx))))
