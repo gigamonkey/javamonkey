@@ -50,22 +50,11 @@
                      (c-hanging-comment-ender-p . nil)))
 
 (defun javamonkey-initialize-javamonkey ()
-  (javamonkey-add-nomenclature-movement)
   (c-set-style "javamonkey-java")
   (javamonkey-slurp-imports)
   (if javamonkey-dwim-imports
-      (javamonkey-prepare-auto-import)))
-
-(defun javamonkey-add-nomenclature-movement ()
-  "Add keybindings so standard movement commands grok InterCaps"
-  (define-key java-mode-map "\M-b" 'c-backward-into-nomenclature)
-  (define-key java-mode-map "\M-f" 'c-forward-into-nomenclature)
-  (define-key java-mode-map [(meta backspace)]
-    'javamonkey-backward-into-nomenclature-kill-word)
-  (define-key java-mode-map "\M-\^?"
-    'javamonkey-backward-into-nomenclature-kill-word)
-  (define-key java-mode-map "\M-d"
-    'javamonkey-forward-into-nomenclature-kill-word))
+      (javamonkey-prepare-auto-import))
+  (subword-mode))
 
 (defun javamonkey-fill-to-right (s)
   "Fill from the current position on the line to the right with the
@@ -136,25 +125,6 @@ aligned on the regex '=' becomes:
       (cl-replace "}\\(\\S +\\)" "} \\1")
       (cl-replace "}\\s +$" "}"))))
 
-(defun javamonkey-forward-into-nomenclature-kill-word (&optional arg)
-  (interactive "p")
-  (let ((times (or arg 1)))
-    (save-excursion
-      (let ((beg (point))
-            (end 0))
-        (c-forward-into-nomenclature times)
-        (setq end (point))
-        (kill-region beg end)))))
-
-(defun javamonkey-backward-into-nomenclature-kill-word (&optional arg)
-  (interactive "p")
-  (let ((times (or arg 1)))
-    (save-excursion
-      (let ((end (point))
-            (beg 0))
-        (c-backward-into-nomenclature times)
-        (setq beg (point))
-        (kill-region beg end)))))
 
 (defun javamonkey-add-source-root (dir)
   (interactive "DSource root: ")
